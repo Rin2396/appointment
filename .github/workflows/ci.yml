@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Poetry
+        run: pip install poetry==1.7.1
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create false
+          poetry install
+      - name: Lint (ruff)
+        run: poetry run ruff check .
+      - name: Type check (mypy)
+        run: poetry run mypy app
+      - name: Tests
+        run: poetry run pytest --cov=app --cov-report=xml --cov-fail-under=30
+      - name: Docker build
+        run: docker build -t appointment-hub:ci .

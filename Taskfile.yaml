@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  up:
+    desc: "Build and start all services"
+    cmds:
+      - docker-compose up -d --build
+
+  down:
+    desc: "Stop all services"
+    cmds:
+      - docker-compose down --remove-orphans
+
+  migrate:
+    desc: "Run Alembic migrations"
+    cmds:
+      - docker-compose exec api alembic upgrade head
+
+  test:
+    desc: "Run tests with coverage"
+    cmds:
+      - poetry run pytest --cov=app --cov-report=term-missing
+
+  logs:
+    desc: "Tail logs"
+    cmds:
+      - docker-compose logs -f
