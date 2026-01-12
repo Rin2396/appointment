@@ -1,5 +1,6 @@
 import asyncio
 import json
+from typing import cast
 
 import aio_pika
 from aio_pika import Message, RobustConnection
@@ -54,7 +55,7 @@ async def create_rabbit_connection(url: str) -> RobustConnection:
         try:
             conn = await aio_pika.connect_robust(url)
             _debug_log("H4", "rabbit_connected", {"attempt": attempt})
-            return conn
+            return cast(RobustConnection, conn)
         except Exception as exc:
             _debug_log("H4", "rabbit_connect_failed", {"attempt": attempt, "error": str(exc)})
             await asyncio.sleep(min(5, attempt))  # backoff but keep trying

@@ -63,7 +63,7 @@ class AppSettings(BaseSettings):
     db: DatabaseSettings
     redis: RedisSettings
     rabbit: RabbitSettings
-    telegram: TelegramSettings = TelegramSettings()
+    telegram: TelegramSettings = TelegramSettings(bot_token=None, chat_id=None)
     log_level: str = "INFO"
 
 
@@ -76,7 +76,7 @@ def get_settings() -> AppSettings:
     }
     _debug_log("H2", "get_settings_called", {"env_presence_flags": env_presence})
     try:
-        settings = AppSettings()  # type: ignore[arg-type]
+        settings = AppSettings()  # type: ignore[call-arg]
         _debug_log(
             "H2",
             "app_settings_created",
